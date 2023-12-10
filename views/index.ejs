@@ -11,9 +11,6 @@
     <h1><%= title %></h1>
     <p>Welcome to the Music App</p>
 
-    <!-- 音声事前読み込み用の非表示のAudio要素 -->
-    <audio id="preloadAudio" preload="auto" style="display: none"></audio>
-
     <!-- データベースから取得した曲の数だけ再生ボタンを表示 -->
     <% songs.forEach(song => { %>
     <button type="button" onclick="playAudio('<%= song.path %>')">
@@ -23,71 +20,19 @@
 
     <!-- スクリプト -->
     <script>
-      // function playAudio(path) {
-      //   // Audio要素の生成
-      //   let audioElement = new Audio(path);
-
-      //   // 音声再生
-      //   audioElement
-      //     .play()
-      //     .then(() => {
-      //       console.log("Audio playback started");
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error starting audio playback:", error);
-      //     });
-      // }
-
-      // // Web Audio APIを使った再生
-      // function playAudio(path) {
-      //   const audioContext = new (window.AudioContext ||
-      //     window.webkitAudioContext)();
-      //   const audioElement = new Audio(path);
-      //   const source = audioContext.createMediaElementSource(audioElement);
-      //   source.connect(audioContext.destination);
-      //   audioElement.play();
-      // }
-
-      // 事前に読み込んだ音声ファイルのAudio要素
-      // const preloadAudio = document.getElementById("preloadAudio");
-
-      // // Web Audio APIを使った再生
-      // function playAudio(path) {
-      //   const audioContext = new (window.AudioContext ||
-      //     window.webkitAudioContext)();
-      //   const source = audioContext.createMediaElementSource(preloadAudio);
-      //   source.connect(audioContext.destination);
-
-      //   // 再生する音声ファイルのパスをセット
-      //   preloadAudio.src = path;
-      //   preloadAudio.play();
-      // }
-
-      function preloadAudio(path) {
-        const audio = new Audio();
-        audio.src = path;
-        audio.load();
-      }
-
-      // ページ読み込み時に音声を事前読み込み
-      window.onload = function () {
-        songs.forEach((song) => {
-          preloadAudio(song.path);
-        });
-      };
-
-      // Web Audio APIを使った再生
       function playAudio(path) {
-        const audioElement = new Audio(path);
-        const audioContext = new (window.AudioContext ||
-          window.webkitAudioContext)();
-        const source = audioContext.createMediaElementSource(audioElement);
-        source.connect(audioContext.destination);
+        // Audio要素の生成
+        let audioElement = new Audio(path);
 
-        // 一時停止してから再生
-        audioElement.pause();
-        audioElement.currentTime = 0;
-        audioElement.play();
+        // 音声再生
+        audioElement
+          .play()
+          .then(() => {
+            console.log("Audio playback started");
+          })
+          .catch((error) => {
+            console.error("Error starting audio playback:", error);
+          });
       }
     </script>
   </body>
