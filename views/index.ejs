@@ -29,7 +29,7 @@
         audioElement
           .play()
           .then(() => {
-            console.log(`Audio playback started: ${song.title}`);
+            console.log(`Audio playback started: ${path}`);
           })
           .catch((error) => {
             console.error("Error starting audio playback:", error);
