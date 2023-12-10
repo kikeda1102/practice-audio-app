@@ -1,0 +1,40 @@
+<!-- index.ejs -->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music App</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="icon" href="/favicon.png" />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to the Music App</p>
+
+    <!-- データベースから取得した曲の数だけ再生ボタンを表示 -->
+    <% songs.forEach(song => { %>
+    <button type="button" onclick="playAudio('<%= song.path %>')">
+      <%= song.title %>
+    </button>
+    <% }); %>
+
+    <!-- スクリプト -->
+    <script>
+      function playAudio(path) {
+        // Audio要素の生成
+        let audioElement = new Audio(path);
+
+        // 音声再生
+        audioElement
+          .play()
+          .then(() => {
+            console.log(`Audio playback started: ${path}`);
+          })
+          .catch((error) => {
+            console.error("Error starting audio playback:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
