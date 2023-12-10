@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000; // Herokuが提供するポートまたはデフォルトのポート3000を使用
 
 app.use(cors()); // CORSミドルウェアを追加
 app.use(bodyParser.urlencoded({ extended: true })); // URLエンコードされたデータを解析するミドルウェアを追加
@@ -54,6 +54,6 @@ app.get("/", (req, res) => {
   res.render("index", { title: "Music App", songs: songs });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });
