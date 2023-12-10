@@ -18,19 +18,29 @@
 
     <!-- 音声再生用のスクリプト -->
     <script>
-      function playAudio(path) {
-        // Audio要素の生成
-        let audioElement = new Audio(path);
+      // function playAudio(path) {
+      //   // Audio要素の生成
+      //   let audioElement = new Audio(path);
 
-        // 音声再生
-        audioElement
-          .play()
-          .then(() => {
-            console.log("Audio playback started");
-          })
-          .catch((error) => {
-            console.error("Error starting audio playback:", error);
-          });
+      //   // 音声再生
+      //   audioElement
+      //     .play()
+      //     .then(() => {
+      //       console.log("Audio playback started");
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error starting audio playback:", error);
+      //     });
+      // }
+
+      // Web Audio APIを使った再生
+      function playAudio(path) {
+        const audioContext = new (window.AudioContext ||
+          window.webkitAudioContext)();
+        const audioElement = new Audio(path);
+        const source = audioContext.createMediaElementSource(audioElement);
+        source.connect(audioContext.destination);
+        audioElement.play();
       }
     </script>
   </body>
