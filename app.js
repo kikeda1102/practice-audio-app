@@ -48,10 +48,10 @@ const jsonFilePath = path.join(__dirname, "clipInfo.json");
 // ルートパスへのGETリクエストの処理
 app.get("/", (req, res) => {
   // JSONファイルから曲の情報を取得
-  const songs = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
+  const clips = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
 
   // データベースから取得した曲の情報をテンプレートに渡して表示
-  res.render("index", { title: "Music App", songs: songs });
+  res.render("index", { clips: clips });
 });
 
 app.listen(PORT, () => {

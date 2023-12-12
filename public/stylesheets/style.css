@@ -2,6 +2,7 @@ body {
   font-family: Arial, sans-serif;
   text-align: center;
   margin: 20px;
+  background-color: #f0f0f0;
 }
 
 h1 {
@@ -11,13 +12,17 @@ h1 {
 button {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #3498db;
-  color: #fff;
+  background-color: #ffd700; /* 落ち着いた黄色に変更 */
+  color: #000000;
   border: none;
   cursor: pointer;
   border-radius: 5px;
+  transition: background-color 0.3s ease; /* ホバー時のトランジションを追加 */
+  line-height: 1; /* テキストの縦の中央揃え */
+  margin-right: 1px;
+  margin-bottom: 5px;
 }
 
 button:hover {
-  background-color: #2980b9;
+  background-color: #ffcc29; /* ホバー時の色を調整 */
 }

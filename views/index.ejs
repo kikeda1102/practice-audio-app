@@ -4,18 +4,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Music App</title>
+    <title>オモチャンボタン</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <link rel="icon" href="/favicon.png" />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to the Music App</p>
+    <h1>オモチャンボタン</h1>
+    <p>音量注意</p>
 
     <!-- データベースから取得した曲の数だけ再生ボタンを表示 -->
-    <% songs.forEach(song => { %>
-    <button type="button" onclick="playAudio('<%= song.path %>')">
-      <%= song.title %>
+    <% clips.forEach(clip => { %>
+    <button type="button" onclick="playAudio('<%= clip.filepath %>')">
+      <%= clip.title %>
     </button>
     <% }); %>
 
