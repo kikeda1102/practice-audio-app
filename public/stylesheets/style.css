@@ -42,6 +42,7 @@ button:hover {
   height: 100%;
   background-color: #4caf50;
   width: 0; /* 初期状態では0% */
+  position: absolute;
 }
 
 .modal {
