@@ -13,11 +13,11 @@
 </head>
 
 <body>
-  <!-- モーダルウィンドウ -->
-  <div id="confirmationModal" class="modal">
-    <div class="modal-content">
-      <button id="confirmYes">音声の読み込みを開始</button>
 
+  <!-- モーダルウィンドウ -->
+  <div id="loadingModal" class="modal">
+    <div class="modal-content">
+      <button id="startLoading">音声の読み込みを開始</button>
     </div>
   </div>
 
@@ -25,34 +25,63 @@
   <p>※音量注意※</p>
 
   <!-- スクリプトセクション -->
-  <script>
-
-    // モーダル表示
-    function showModal() {
-      $('#confirmationModal').show();
-    }
-
-    // モーダル非表示
-    function hideModal() {
-      $('#confirmationModal').hide();
-    }
+  <script type="text/javascript">
 
     // 確認ダイアログを表示する関数
-    async function showConfirmationDialog() {
-      return new Promise((resolve) => {
-        showModal();
+    async function showLoadingModal(clips) {
+      return new Promise(async (resolve) => {
+        $('#loadingModal').show();
 
-        // はいボタンがクリックされたらresolve
-        $('#confirmYes').on('click', function () {
-          hideModal();
-          resolve();
-        });
+        // プログレスバーの作成と追加
+        const progressContainer = document.createElement("div");
+        progressContainer.className = "progress-container";
+        document.querySelector('.modal-content').appendChild(progressContainer);
 
-        // いいえボタンがクリックされたらresolve
-        $('#confirmNo').on('click', function () {
-          hideModal();
-          // キャンセルされた場合はrejectなども可能
-          resolve();
+        const progressBar = document.createElement("div");
+        progressBar.className = "progress-bar";
+        progressContainer.appendChild(progressBar);
+
+        // ボタンがクリックされたらプリロード開始
+        $('#startLoading').on('click', async function () {
+          $(this).addClass('clicked');
+          try {
+
+            // Web Audio APIコンテキストの作成
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            // preload
+            const audioBuffers = await preloadAllAudio(clips, progressBar);
+
+            // ブラウザの再生状態を確認
+            if (audioContext.state === "suspended") {
+              // AudioContextが一時停止状態の場合、ユーザージェスチャー後に再開
+              document.addEventListener(
+                "click",
+                function () {
+                  audioContext.resume().then(() => {
+                    console.log("AudioContext resumed successfully");
+                  });
+                },
+                { once: true }
+              );
+            }
+
+            // ボタンの作成とクリック時の処理を設定
+            clips.forEach((clip, index) => {
+              const button = document.createElement("button");
+              button.type = "button";
+              button.textContent = clip.title;
+              button.onclick = () => playAudio(audioBuffers[index]);
+              document.body.appendChild(button);
+            });
+
+            // プリロードが完了したら Modal を閉じる
+            $('#loadingModal').hide();
+            resolve(audioBuffers);
+          } catch (error) {
+            // エラーが発生した場合の処理
+            console.error(error);
+          }
         });
       });
     }
@@ -63,52 +92,46 @@
     }
 
     // 音声データを一括でプリロードする関数
-    async function preloadAllAudio(clips) {
-      // プログレスバーの作成と追加
-      const progressContainer = document.createElement("div");
-      progressContainer.className = "progress-container";
-      document.body.appendChild(progressContainer);
+    async function preloadAllAudio(clips, progressBar) {
+      return new Promise(async (resolve) => {
+        // Promiseの配列を作成
+        const promises = clips.map(async (clip, index) => {
+          // ファイルの取得
+          const response = await fetch(clip.filepath);
 
-      const progressBar = document.createElement("div");
-      progressBar.className = "progress-bar";
-      progressContainer.appendChild(progressBar);
+          // レスポンスが正常でない場合はエラーをスロー
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch: ${response.status} ${response.statusText}`
+            );
+          }
 
-      // Promiseの配列を作成
-      const promises = clips.map(async (clip, index) => {
-        // ファイルの取得
-        const response = await fetch(clip.filepath);
+          // 音声データの取得とデコード
+          const arrayBuffer = await response.arrayBuffer();
+          const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
-        // レスポンスが正常でない場合はエラーをスロー
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch: ${response.status} ${response.statusText}`
-          );
-        }
-
-        // 音声データの取得とデコード
-        const arrayBuffer = await response.arrayBuffer();
-        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-        // 進捗のリアルタイム表示
-        const progress = (index + 1) / clips.length * 100;
-        progressBar.style.width = `${progress}%`;
+          // 進捗のリアルタイム表示
+          const progress = (index + 1) / clips.length * 100;
+          progressBar.style.width = `${progress}%`;
 
 
-        // 取得した音声データを返す
-        return audioBuffer;
-      });
+          // 取得した音声データを返す
+          return audioBuffer;
+        });
 
 
-      // すべての音声データを一括でプリロード
-      const audioBuffers = await Promise.all(promises);
+        // すべての音声データを一括でプリロード
+        const audioBuffers = await Promise.all(promises);
 
-      // プログレスバーの進捗を100%に更新
-      // progressBar.style.width = "100%";
+        // プログレスバーの進捗を100%に更新
+        progressBar.style.width = "100%";
 
-      // プログレスバーの削除
-      // progressContainer.remove();
+        // プログレスバーの削除
+        // progressContainer.remove();
 
-      return audioBuffers;
+        resolve(audioBuffers);
+      }
+      );
     }
 
 
@@ -127,40 +150,15 @@
         document.addEventListener("dblclick", function (e) {
           e.preventDefault();
         }, { passive: false });
-        // ユーザーの確認を得る
-        await showConfirmationDialog();
-
-        // Web Audio APIコンテキストの作成
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-        // ブラウザの再生状態を確認
-        if (audioContext.state === "suspended") {
-          // AudioContextが一時停止状態の場合、ユーザージェスチャー後に再開
-          document.addEventListener(
-            "click",
-            function () {
-              audioContext.resume().then(() => {
-                console.log("AudioContext resumed successfully");
-              });
-            },
-            { once: true }
-          );
-        }
 
         // JSONから音声情報を取得
         const clips = JSON.parse('<%- clips %>');
 
-        // 全ての音声データを一括でプリロード
-        const audioBuffers = await preloadAllAudio(clips);
 
-        // ボタンの作成とクリック時の処理を設定
-        clips.forEach((clip, index) => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.textContent = clip.title;
-          button.onclick = () => playAudio(audioBuffers[index]);
-          document.body.appendChild(button);
-        });
+
+        // ユーザーの確認を得る
+        await showLoadingModal(clips);
+
       } catch (error) {
         // エラーが発生した場合はコンソールに出力
         console.error(error);
