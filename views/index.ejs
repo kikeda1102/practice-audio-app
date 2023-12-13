@@ -64,7 +64,7 @@
 
     // 音声データを一括でプリロードする関数
     async function preloadAllAudio(clips) {
-      // プログレスバーの作成とドキュメントへの追加
+      // プログレスバーの作成と追加
       const progressContainer = document.createElement("div");
       progressContainer.className = "progress-container";
       document.body.appendChild(progressContainer);
@@ -89,57 +89,21 @@
         const arrayBuffer = await response.arrayBuffer();
         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
+        // 進捗のリアルタイム表示
+        const progress = (index + 1) / clips.length * 100;
+        progressBar.style.width = `${progress}%`;
+
+
         // 取得した音声データを返す
         return audioBuffer;
       });
 
-      // 進捗のリアルタイム表示
-      const totalSize = clips.reduce((acc, clip) => acc + clip.size, 0);
-      let loadedSize = 0;
 
-      // プログレスバーの更新関数
-      function updateProgressBar() {
-        const progress = (loadedSize / totalSize) * 100;
-        progressBar.style.width = `${progress}%`;
-      }
-
-      // 進捗イベントのハンドラ
-      function progressHandler(event) {
-        if (event.lengthComputable) {
-          loadedSize += event.loaded;
-          updateProgressBar();
-        }
-      }
-
-      // 進捗イベントのリスナーを登録
-      for (const clip of clips) {
-        const response = await fetch(clip.filepath);
-        const reader = response.body.getReader();
-        let totalBytes = 0;
-
-        async function read() {
-          const { done, value } = await reader.read();
-
-          if (done) {
-            return;
-          }
-
-          totalBytes += value.length;
-          loadedSize += value.length;
-          updateProgressBar();
-
-          // 再帰的に次の塊を読み込む
-          return read();
-        }
-
-        // 初回の読み込みを開始
-        read();
-      }
       // すべての音声データを一括でプリロード
       const audioBuffers = await Promise.all(promises);
 
       // プログレスバーの進捗を100%に更新
-      progressBar.style.width = "100%";
+      // progressBar.style.width = "100%";
 
       // プログレスバーの削除
       // progressContainer.remove();
@@ -205,6 +169,7 @@
 
     // ページが読み込まれた時に初期化関数を実行
     document.addEventListener("DOMContentLoaded", initialize);
+
   </script>
 </body>
 

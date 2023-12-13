@@ -39,7 +39,6 @@ button:hover {
 .progress-bar {
   height: 100%;
   background-color: #4caf50;
-  /* border-radius: 5px; */
   width: 0; /* 初期状態では0%に設定 */
 }
 
