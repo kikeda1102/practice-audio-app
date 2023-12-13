@@ -2,172 +2,207 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
+    <!-- レスポンシブ対応 -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
     <title>オモチャンボタン</title>
   </head>
 
   <body>
+    <!-- モーダルウィンドウ -->
+    <div id="confirmationModal" class="modal">
+      <div class="modal-content">
+        <p>音声を読み込みますか？</p>
+        <button id="confirmYes">はい</button>
+        <button id="confirmNo">いいえ</button>
+      </div>
+    </div>
+
     <h1>オモチャンボタン</h1>
     <p>※音量注意※</p>
 
     <!-- スクリプトセクション -->
     <script>
-      // Web Audio API用のコンテキスト
-      let audioContext;
+
+      // モーダル表示
+      function showModal() {
+        $('#confirmationModal').show();
+      }
+
+      // モーダル非表示
+      function hideModal() {
+        $('#confirmationModal').hide();
+      }
 
       // 確認ダイアログを表示する関数
       async function showConfirmationDialog() {
         return new Promise((resolve) => {
-          if (confirm("音声を読み込みますか？")) {
+          showModal();
+
+          // はいボタンがクリックされたらresolve
+          $('#confirmYes').on('click', function () {
+            hideModal();
             resolve();
-          }
+          });
+
+          // いいえボタンがクリックされたらresolve
+          $('#confirmNo').on('click', function () {
+            hideModal();
+            // キャンセルされた場合はrejectなども可能
+            resolve();
+          });
         });
       }
 
-      // 指定時間待機する関数
-      async function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
-
-      // 音声データを一括でプリロードする関数
-      async function preloadAllAudio(clips) {
-        // プログレスバーの作成とドキュメントへの追加
-        const progressContainer = document.createElement("div");
-        progressContainer.className = "progress-container";
-        document.body.appendChild(progressContainer);
-
-        const progressBar = document.createElement("div");
-        progressBar.className = "progress-bar";
-        progressContainer.appendChild(progressBar);
-
-        // Promiseの配列を作成
-        const promises = clips.map(async (clip, index) => {
-          // ファイルの取得
-          const response = await fetch(clip.filepath);
-
-          // レスポンスが正常でない場合はエラーをスロー
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch: ${response.status} ${response.statusText}`
-            );
-          }
-
-          // 音声データの取得とデコード
-          const arrayBuffer = await response.arrayBuffer();
-          const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-          // 取得した音声データを返す
-          return audioBuffer;
-        });
-
-        // 進捗のリアルタイム表示
-        const totalSize = clips.reduce((acc, clip) => acc + clip.size, 0);
-        let loadedSize = 0;
-
-        // プログレスバーの更新関数
-        function updateProgressBar() {
-          const progress = (loadedSize / totalSize) * 100;
-          progressBar.style.width = `${progress}%`;
-        }
-
-        // 進捗イベントのハンドラ
-        function progressHandler(event) {
-          if (event.lengthComputable) {
-            loadedSize += event.loaded;
-            updateProgressBar();
-          }
-        }
-
-        // 進捗イベントのリスナーを登録
-        for (const clip of clips) {
-          const response = await fetch(clip.filepath);
-          const reader = response.body.getReader();
-          let totalBytes = 0;
-
-          async function read() {
-            const { done, value } = await reader.read();
-
-            if (done) {
-              return;
+            // 指定時間待機する関数
+            async function sleep(ms) {
+              return new Promise((resolve) => setTimeout(resolve, ms));
             }
 
-            totalBytes += value.length;
-            loadedSize += value.length;
-            updateProgressBar();
+            // 音声データを一括でプリロードする関数
+            async function preloadAllAudio(clips) {
+              // プログレスバーの作成とドキュメントへの追加
+              const progressContainer = document.createElement("div");
+              progressContainer.className = "progress-container";
+              document.body.appendChild(progressContainer);
 
-            // 再帰的に次の塊を読み込む
-            return read();
-          }
+              const progressBar = document.createElement("div");
+              progressBar.className = "progress-bar";
+              progressContainer.appendChild(progressBar);
 
-          // 初回の読み込みを開始
-          read();
-        }
-        // すべての音声データを一括でプリロード
-        const audioBuffers = await Promise.all(promises);
+              // Promiseの配列を作成
+              const promises = clips.map(async (clip, index) => {
+                // ファイルの取得
+                const response = await fetch(clip.filepath);
 
-        // プログレスバーの進捗を100%に更新
-        progressBar.style.width = "100%";
+                // レスポンスが正常でない場合はエラーをスロー
+                if (!response.ok) {
+                  throw new Error(
+                    `Failed to fetch: ${response.status} ${response.statusText}`
+                  );
+                }
 
-        // プログレスバーの削除
-        // progressContainer.remove();
+                // 音声データの取得とデコード
+                const arrayBuffer = await response.arrayBuffer();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
-        return audioBuffers;
-      }
+                // 取得した音声データを返す
+                return audioBuffer;
+              });
+
+              // 進捗のリアルタイム表示
+              const totalSize = clips.reduce((acc, clip) => acc + clip.size, 0);
+              let loadedSize = 0;
+
+              // プログレスバーの更新関数
+              function updateProgressBar() {
+                const progress = (loadedSize / totalSize) * 100;
+                progressBar.style.width = `${progress}%`;
+              }
+
+              // 進捗イベントのハンドラ
+              function progressHandler(event) {
+                if (event.lengthComputable) {
+                  loadedSize += event.loaded;
+                  updateProgressBar();
+                }
+              }
+
+              // 進捗イベントのリスナーを登録
+              for (const clip of clips) {
+                const response = await fetch(clip.filepath);
+                const reader = response.body.getReader();
+                let totalBytes = 0;
+
+                async function read() {
+                  const { done, value } = await reader.read();
+
+                  if (done) {
+                    return;
+                  }
+
+                  totalBytes += value.length;
+                  loadedSize += value.length;
+                  updateProgressBar();
+
+                  // 再帰的に次の塊を読み込む
+                  return read();
+                }
+
+                // 初回の読み込みを開始
+                read();
+              }
+              // すべての音声データを一括でプリロード
+              const audioBuffers = await Promise.all(promises);
+
+              // プログレスバーの進捗を100%に更新
+              progressBar.style.width = "100%";
+
+              // プログレスバーの削除
+              // progressContainer.remove();
+
+              return audioBuffers;
+            }
 
 
-      // 音声再生
-      function playAudio(audioBuffer) {
-        const source = audioContext.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(audioContext.destination);
-        source.start(0);
-      }
+            // 音声再生
+            function playAudio(audioBuffer) {
+              const source = audioContext.createBufferSource();
+              source.buffer = audioBuffer;
+              source.connect(audioContext.destination);
+              source.start(0);
+            }
 
-      // 初期化関数
-      async function initialize() {
-        try {
-          // ユーザーの確認を得る
-          await showConfirmationDialog();
+            // 初期化関数
+            async function initialize() {
+              try {
+                // ユーザーの確認を得る
+                await showConfirmationDialog();
 
-          // Web Audio APIコンテキストの作成
-          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                // Web Audio APIコンテキストの作成
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-          // ブラウザの再生状態を確認
-          if (audioContext.state === "suspended") {
-            // AudioContextが一時停止状態の場合、ユーザージェスチャー後に再開
-            document.addEventListener(
-              "click",
-              function () {
-                audioContext.resume().then(() => {
-                  console.log("AudioContext resumed successfully");
+                // ブラウザの再生状態を確認
+                if (audioContext.state === "suspended") {
+                  // AudioContextが一時停止状態の場合、ユーザージェスチャー後に再開
+                  document.addEventListener(
+                    "click",
+                    function () {
+                      audioContext.resume().then(() => {
+                        console.log("AudioContext resumed successfully");
+                      });
+                    },
+                    { once: true }
+                  );
+                }
+
+                // JSONから音声情報を取得
+                const clips = JSON.parse('<%- clips %>');
+
+                // 全ての音声データを一括でプリロード
+                const audioBuffers = await preloadAllAudio(clips);
+
+                // ボタンの作成とクリック時の処理を設定
+                clips.forEach((clip, index) => {
+                  const button = document.createElement("button");
+                  button.type = "button";
+                  button.textContent = clip.title;
+                  button.onclick = () => playAudio(audioBuffers[index]);
+                  document.body.appendChild(button);
                 });
-              },
-              { once: true }
-            );
-          }
+              } catch (error) {
+                // エラーが発生した場合はコンソールに出力
+                console.error(error);
+              }
+            }
 
-          // JSONから音声情報を取得
-          const clips = JSON.parse('<%- clips %>');
-
-          // 全ての音声データを一括でプリロード
-          const audioBuffers = await preloadAllAudio(clips);
-
-          // ボタンの作成とクリック時の処理を設定
-          clips.forEach((clip, index) => {
-            const button = document.createElement("button");
-            button.type = "button";
-            button.textContent = clip.title;
-            button.onclick = () => playAudio(audioBuffers[index]);
-            document.body.appendChild(button);
-          });
-        } catch (error) {
-          // エラーが発生した場合はコンソールに出力
-          console.error(error);
-        }
-      }
-
-      // ページが読み込まれた時に初期化関数を実行
-      document.addEventListener("DOMContentLoaded", initialize);
+            // ページが読み込まれた時に初期化関数を実行
+            document.addEventListener("DOMContentLoaded", initialize);
     </script>
   </body>
 </html>
