@@ -3,11 +3,9 @@
 
 <head>
   <meta charset="utf-8" />
-  <!-- レスポンシブ対応 -->
+  <!-- レスポンシブ対応、スマホ対応 -->
   <meta name="viewport"
     content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
   <title>オモチャンボタン</title>
 </head>
@@ -15,7 +13,7 @@
 <body>
 
   <!-- モーダルウィンドウ -->
-  <div id="loadingModal" class="modal">
+  <div id="loadModal" class="modal">
     <div class="modal-content">
       <button id="startLoading">音声の読み込みを開始</button>
     </div>
@@ -28,9 +26,11 @@
   <script type="text/javascript">
 
     // 確認ダイアログを表示する関数
-    async function showLoadingModal(clips) {
+    async function showLoadModal(clips) {
       return new Promise(async (resolve) => {
-        $('#loadingModal').show();
+
+        // モーダルを表示
+        document.getElementById('loadModal').style.display = 'block';
 
         // プログレスバーの作成と追加
         const progressContainer = document.createElement("div");
@@ -42,8 +42,8 @@
         progressContainer.appendChild(progressBar);
 
         // ボタンがクリックされたらプリロード開始
-        $('#startLoading').on('click', async function () {
-          $(this).addClass('clicked');
+        document.getElementById('startLoading').addEventListener('click', async function () {
+          this.classList.add('clicked');
           try {
 
             // Web Audio APIコンテキストの作成
@@ -76,7 +76,8 @@
             });
 
             // プリロードが完了したら Modal を閉じる
-            $('#loadingModal').hide();
+            document.getElementById('loadModal').style.display = 'none';
+
             resolve(audioBuffers);
           } catch (error) {
             // エラーが発生した場合の処理
@@ -96,6 +97,7 @@
       return new Promise(async (resolve) => {
         // Promiseの配列を作成
         const promises = clips.map(async (clip, index) => {
+
           // ファイルの取得
           const response = await fetch(clip.filepath);
 
@@ -113,6 +115,9 @@
           // 進捗のリアルタイム表示
           const progress = (index + 1) / clips.length * 100;
           progressBar.style.width = `${progress}%`;
+
+          // 1000ms待機
+          await sleep(1000);
 
 
           // 取得した音声データを返す
@@ -155,9 +160,8 @@
         const clips = JSON.parse('<%- clips %>');
 
 
-
-        // ユーザーの確認を得る
-        await showLoadingModal(clips);
+        // モーダルウィンドウを表示 userGestureを得るため
+        await showLoadModal(clips);
 
       } catch (error) {
         // エラーが発生した場合はコンソールに出力
