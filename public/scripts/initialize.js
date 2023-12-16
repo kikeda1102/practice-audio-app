@@ -39,11 +39,12 @@ async function initialize() {
         // clipsからwhoSaidのユニークな値を取得
         const uniqueWhoSaidValues = [...new Set(clips.map(clip => clip.whoSaid))];
 
+
         // タグフィルターのボタンの生成
         const tagButtonsContainer = document.querySelector(".accordion-section-content");
         uniqueWhoSaidValues.forEach(tag => {
             const button = document.createElement("button");
-            button.className = "btn btn-selected rounded-pill";
+            button.className = "btn btn-unselected tagbutton";
             button.textContent = tag;
             button.onclick = () => filterClipsByTag(tag);
             tagButtonsContainer.appendChild(button);
@@ -68,61 +69,6 @@ async function initialize() {
 
 
 
-        // ワード検索機能, 再生ボタンの生成
-        function handleSearch() {
-            const searchQuery = document.getElementById('searchInput').value.trim();
-            const playButtonArea = document.getElementById('playButtonArea');
-
-            // ここで検索処理を実装
-            const searchResults = performSearch(searchQuery, clips);
-
-            // 検索結果表示エリアをクリア
-            playButtonArea.innerHTML = '';
-
-            // 検索結果があるかどうかをチェック
-            if (searchResults.length > 0) {
-                // 検索結果がある場合はボタンを表示
-                searchResults.forEach((clip) => {
-                    const button = document.createElement("button");
-                    button.type = "button";
-                    button.textContent = clip.title;
-                    button.onclick = () => {
-                        // 単音モードの場合、選択された音のみ再生
-                        // 単音モードの場合、選択された音のみ再生
-                        if (isMonophonic) {
-                            playMonoAudio(clip.audioBuffer);
-                        } else {
-                            // 複音モードの場合、すべての音を同時に再生
-                            playPolyAudio(clip.audioBuffer);
-                        }
-                    };
-                    playButtonArea.appendChild(button);
-                });
-            } else {
-                // 検索結果がない場合はメッセージを表示
-                const noResultsMessage = document.createElement("p");
-                noResultsMessage.textContent = "検索結果がありません";
-                playButtonArea.appendChild(noResultsMessage);
-            }
-        }
-
-        function performSearch(query, clips) {
-            // 検索クエリが空の場合
-            if (!query) {
-                return clips;
-            }
-            // 検索結果を格納する配列
-            const searchResults = [];
-
-            // clipsから検索クエリに一致するclipを抽出
-            clips.forEach(clip => {
-                // clip.titleがqueryを含む場合
-                if (clip.title.toLowerCase().includes(query.toLowerCase())) {
-                    searchResults.push(clip);
-                }
-            });
-            return searchResults;
-        }
 
 
     } catch (error) {

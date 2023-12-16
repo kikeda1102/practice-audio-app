@@ -20,3 +20,13 @@ function updateModeButtons() {
     polyphonicButton.classList.toggle('btn-unselected', isMonophonic);
     polyphonicButton.classList.toggle('btn-selected', !isMonophonic);
 }
+
+// tagボタンのスタイルを更新
+function updateTagButtons(currentSelectedTags) {
+    const tagButtons = document.querySelectorAll(".tagbutton");
+    tagButtons.forEach(button => {
+        button.classList.toggle('btn-selected', currentSelectedTags.includes(button.textContent));
+        button.classList.toggle('btn-unselected', !currentSelectedTags.includes(button.textContent));
+        // console.log(`${button.textContent}'のstyleは${button.style}です`);
+    });
+}

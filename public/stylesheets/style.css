@@ -15,6 +15,16 @@ h1 {
   margin-bottom: 24px;
 }
 
+.accordion-section-content {
+  display: block;
+  /* 最初は表示 */
+}
+
+.hidden {
+  display: none;
+  /* 非表示のスタイル */
+}
+
 button {
   padding: 10px 20px;
   margin-right: 8px;
@@ -101,7 +111,7 @@ button:active {
 /* サイドバー */
 #sidebar {
   position: fixed;
-  bottom: -100%; /* 画面下に隠す */
+  bottom: -100%;
   left: 0;
   width: 100%;
   z-index: 1;
@@ -128,8 +138,7 @@ button:active {
   position: absolute;
   top: 0;
   left: 5px;
-  font-size: 36px;
-  margin-right: 20px;
+  font-size: 24px;
 }
 
 .main-content {
