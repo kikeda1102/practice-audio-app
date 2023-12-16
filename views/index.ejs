@@ -14,20 +14,41 @@
 </head>
 
 <body>
+  <!-- load js -->
+  <script>
+    window.clips = JSON.parse('<%- clips %>');
+  </script>
+  <script src="scripts/initialize.js"></script>
+  <script src="scripts/audioPlay.js"></script>
+  <script src="scripts/sidebar.js"></script>
+  <script src="scripts/modal.js"></script>
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 
-  <!-- モーダルウィンドウ -->
+
+  <!-- initial mordal -->
   <div id="loadModal" class="modal">
     <div class="modal-content">
       <button id="startLoading" class="btn btn-selected modal-button">音声の読み込みを開始</button>
     </div>
   </div>
 
-
-
-
-
+  <!-- ホーム画面 -->
   <h1 class="display-6">オモチャンボタン</h1>
   <p class="warning-text">※音量注意※</p>
+
+
+  <!-- ワード検索 結果表示 -->
+  <div id="searchResults"></div>
+
 
   <!-- サイドバーの表示トグルボタン-->
   <button id="sidebar-toggle-button" onclick="openNav()" class="position-fixed p-3 bg-dark text-white"
@@ -39,292 +60,29 @@
   <!-- サイドバー -->
   <div id="sidebar" class="sidebar bg-dark text-white">
     <a href="javascript:void(0)" class="closebtn text-white" onclick="closeNav()">×</a>
-    <div class="p-4 text-center accordion-section-content">
-      <p class="text-white m-2">発音数</p>
-      <div class="mono-poly-buttons">
-        <button id="monophonicButton" class="btn btn-selected" onclick="setMonophonicMode()">Mono</button>
-        <button id="polyphonicButton" class="btn btn-selected" onclick="setPolyphonicMode()">Poly</button>
-      </div>
-      <!-- 検索フォーム -->
-      <p class="text-white m-2">検索</p>
-      <form id="searchForm" onsubmit="handleSearch(); return false;">
-        <input type="text" id="searchInput" placeholder="検索..." />
-      </form>
 
-      <div class="accordion">
-        <div class="accordion-section">
-          <p class="text-white mt-4 mb-2">フィルター</p>
+    <div class="accordion">
+      <div class="accordion-section">
+        <div class="p-4 text-center accordion-section-content">
+          <p class="text-white m-2">発音数</p>
+          <div class="mono-poly-buttons">
+            <button id="monophonicButton" class="btn btn-selected" onclick="setMonophonicMode()">Mono</button>
+            <button id="polyphonicButton" class="btn btn-selected" onclick="setPolyphonicMode()">Poly</button>
+          </div>
+
+          <p class="text-white m-2">検索</p>
+          <div class="search-form-content">
+            <!-- 検索フォームがここに生成される -->
+          </div>
+
           <div class="accordion-section-content">
-            <!-- タグ用ボタンがここに生成される -->
+            <p class="text-white mt-4 mb-2">フィルター</p>
+            <!-- フィルターボタンがここに生成される -->
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-
-
-
-  <!-- スクリプトセクション -->
-  <script type="text/javascript">
-    // 現在再生中のソース
-    let currentSource;
-    // 単音か複音かのフラグ
-    let isMonophonic = false;
-
-
-    // 音声再生
-    // 単音
-    function playMonoAudio(audioBuffer) {
-      // 現在再生中の音があれば停止
-      if (currentSource) {
-        currentSource.stop();
-      }
-      // 新しいソースを作成して再生
-      const source = audioContext.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(audioContext.destination);
-      source.start(0);
-      // 現在のソースを更新
-      currentSource = source;
-    }
-    // 複数音声
-    function playPolyAudio(audioBuffer) {
-      // 新しいソースを作成して再生
-      const source = audioContext.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(audioContext.destination);
-      source.start(0);
-    }
-
-    // 再生モード切り替え関数
-    function setMonophonicMode() {
-      isMonophonic = true;
-      updateModeButtons();
-    }
-
-    function setPolyphonicMode() {
-      isMonophonic = false;
-      updateModeButtons();
-    }
-
-    // ボタンのスタイルを更新
-    function updateModeButtons() {
-      const monophonicButton = document.getElementById('monophonicButton');
-      const polyphonicButton = document.getElementById('polyphonicButton');
-
-      monophonicButton.classList.toggle('btn-unselected', !isMonophonic);
-      monophonicButton.classList.toggle('btn-selected', isMonophonic);
-
-      polyphonicButton.classList.toggle('btn-unselected', isMonophonic);
-      polyphonicButton.classList.toggle('btn-selected', !isMonophonic);
-    }
-
-    // 確認ダイアログを表示する関数
-    async function showLoadModal(clips) {
-      return new Promise(async (resolve) => {
-
-        // モーダルを表示
-        document.getElementById('loadModal').style.display = 'block';
-
-        // プログレスバーの作成と追加
-        const progressContainer = document.createElement("div");
-        progressContainer.className = "progress-container";
-        document.querySelector('.modal-content').appendChild(progressContainer);
-
-        const progressBar = document.createElement("div");
-        progressBar.className = "progress-bar";
-        progressContainer.appendChild(progressBar);
-
-        // ボタンがクリックされたらプリロード開始
-        document.getElementById('startLoading').addEventListener('click', async function () {
-          this.classList.add('clicked');
-          try {
-
-            // Web Audio APIコンテキストの作成
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            // preload
-            const audioBuffers = await preloadAllAudio(clips, progressBar);
-
-            // ブラウザの再生状態を確認
-            if (audioContext.state === "suspended") {
-              // AudioContextが一時停止状態の場合、ユーザージェスチャー後に再開
-              document.addEventListener(
-                "click",
-                function () {
-                  audioContext.resume().then(() => {
-                    console.log("AudioContext resumed successfully");
-                  });
-                },
-                { once: true }
-              );
-            }
-
-            // playボタンの作成とクリック時の処理を設定
-            clips.forEach((clip, index) => {
-              const button = document.createElement("button");
-              button.type = "button";
-              button.textContent = clip.title;
-              button.onclick = () => {
-                // 単音モードの場合、選択された音のみ再生
-                if (isMonophonic) {
-                  playMonoAudio(audioBuffers[index]);
-                } else {
-                  // 複音モードの場合、すべての音を同時に再生
-                  playPolyAudio(audioBuffers[index]);
-                }
-              };
-              document.body.appendChild(button);
-            });
-
-            // プリロードが完了したら Modal を閉じる
-            document.getElementById('loadModal').style.display = 'none';
-
-            resolve(audioBuffers);
-          } catch (error) {
-            // エラーが発生した場合の処理
-            console.error(error);
-          }
-        });
-      });
-    }
-
-    // 音声データを一括でプリロードする関数
-    async function preloadAllAudio(clips, progressBar) {
-      return new Promise(async (resolve) => {
-        // Promiseの配列を作成
-        const promises = clips.map(async (clip, index) => {
-
-          // ファイルの取得
-          const response = await fetch(`audioClips/${clip.title}.mp3`);
-
-          // レスポンスが正常でない場合はエラーをスロー
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch: ${response.status} ${response.statusText}`
-            );
-          }
-
-          // 音声データの取得とデコード
-          const arrayBuffer = await response.arrayBuffer();
-          const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-          // 進捗のリアルタイム表示
-          const progress = (index + 1) / clips.length * 100;
-          progressBar.style.width = `${progress}%`;
-
-
-          // 取得した音声データを返す
-          return audioBuffer;
-        });
-
-
-        // すべての音声データを一括でプリロード
-        const audioBuffers = await Promise.all(promises);
-
-        // プログレスバーの進捗を100%に更新
-        progressBar.style.width = "100%";
-
-        // プログレスバーの削除
-        // progressContainer.remove();
-
-        resolve(audioBuffers);
-      }
-      );
-    }
-
-
-    // 初期化関数
-    async function initialize() {
-      try {
-        // ダブルタップでの画面拡大を無効にする
-        document.addEventListener("dblclick", function (e) {
-          e.preventDefault();
-        }, { passive: false });
-
-        // JSONから音声情報を取得
-        const clips = JSON.parse('<%- clips %>');
-
-
-        // モーダルウィンドウを表示 userGestureを得るため
-        await showLoadModal(clips);
-
-        // isMonophonicの初期値を読み取り、ボタンのスタイルに反映
-        const monophonicButton = document.getElementById('monophonicButton');
-        const polyphonicButton = document.getElementById('polyphonicButton');
-
-        monophonicButton.classList.toggle('btn-unselected', !isMonophonic);
-        monophonicButton.classList.toggle('btn-selected', isMonophonic);
-
-        polyphonicButton.classList.toggle('btn-unselected', isMonophonic);
-        polyphonicButton.classList.toggle('btn-selected', !isMonophonic);
-
-        // サイドバー以外がクリッックされたときサイドバーを閉じる処理
-        // document.addEventListener("click", function (event) {
-        //   const sidebar = document.getElementById('sidebar');
-        //   const sidebarToggleButton = document.getElementById('sidebar-toggle-button');
-
-        //   let targetElement = event.target;
-        //   while (targetElement) {
-        //     if (targetElement === sidebar || targetElement === sidebarToggleButton) {
-        //       return; // ターゲットがサイドバーまたはトグルボタンの場合は何もしない
-        //     }
-        //     targetElement = targetElement.parentElement;
-        //   }
-        //   // ターゲットがサイドバーまたはトグルボタンの子孫でない場合はサイドバーを閉じる
-        //   closeNav();
-        // });
-
-        // フィルター機能
-        // clipsからwhoSaidのユニークな値を取得
-        const uniqueWhoSaidValues = [...new Set(clips.map(clip => clip.whoSaid))];
-
-        // タグ用ボタンの生成
-        const tagButtonsContainer = document.querySelector(".accordion-section-content");
-        uniqueWhoSaidValues.forEach(tag => {
-          const button = document.createElement("button");
-          button.className = "btn btn-selected rounded-pill";
-          button.textContent = tag;
-          button.onclick = () => filterClipsByTag(tag);
-          tagButtonsContainer.appendChild(button);
-        });
-
-
-      } catch (error) {
-        // エラーが発生した場合はコンソールに出力
-        console.error(error);
-      }
-    }
-
-    // ページが読み込まれた時に初期化関数を実行
-    document.addEventListener("DOMContentLoaded", initialize);
-
-  </script>
-
-  <!-- サイドバーのトグル -->
-  <script>
-    function openNav() {
-      document.getElementById("sidebar").style.bottom = "0";
-    }
-
-    // サイドバーを閉じる処理
-    function closeNav() {
-      document.getElementById("sidebar").style.bottom = "-100%";
-    }
-  </script>
-
-
-
-  <!-- Bootstrap JS and Popper.js -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
 
 </body>
 
