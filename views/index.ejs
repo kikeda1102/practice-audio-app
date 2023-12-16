@@ -3,6 +3,9 @@
 
 <head>
   <meta charset="utf-8" />
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <!-- レスポンシブ対応、スマホ対応 -->
   <meta name="viewport"
     content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
@@ -15,16 +18,92 @@
   <!-- モーダルウィンドウ -->
   <div id="loadModal" class="modal">
     <div class="modal-content">
-      <button id="startLoading">音声の読み込みを開始</button>
+      <button id="startLoading" class="btn btn-primary">音声の読み込みを開始</button>
 
     </div>
   </div>
 
-  <h1>オモチャンボタン</h1>
+
+
+  <h1 class="display-6">オモチャンボタン</h1>
   <p class="warning-text">※音量注意※</p>
+
+  <!-- サイドバーの表示トグルボタン-->
+  <div id="sidebar-toggle-button" onclick="openNav()" class="position-fixed p-3 bg-dark text-white"
+    style="top: 0; left: 0;">
+    <span style="font-size: 24px;">&#9776;</span>
+  </div>
+
+
+  <!-- サイドバー -->
+  <div id="sidebar" class="bg-dark text-white">
+    <a href="javascript:void(0)" class="closebtn text-white" onclick="closeNav()">×</a>
+    <div class="p-4 text-center">
+      <p class="text-white mb-2">再生モード</p>
+      <div class="btn-group">
+        <button id="monophonicButton" class="btn btn-primary rounded-pill" onclick="setMonophonicMode()">単音</button>
+        <button id="polyphonicButton" class="btn btn-primary rounded-pill" onclick="setPolyphonicMode()">複音</button>
+      </div>
+    </div>
+  </div>
+
+
+
 
   <!-- スクリプトセクション -->
   <script type="text/javascript">
+    // 現在再生中のソース
+    let currentSource;
+    // 単音か複音かのフラグ
+    let isMonophonic = false;
+
+
+    // 音声再生
+    // 単音
+    function playMonoAudio(audioBuffer) {
+      // 現在再生中の音があれば停止
+      if (currentSource) {
+        currentSource.stop();
+      }
+      // 新しいソースを作成して再生
+      const source = audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioContext.destination);
+      source.start(0);
+      // 現在のソースを更新
+      currentSource = source;
+    }
+    // 複数音声
+    function playPolyAudio(audioBuffer) {
+      // 新しいソースを作成して再生
+      const source = audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioContext.destination);
+      source.start(0);
+    }
+
+    // 再生モード切り替え関数
+    function setMonophonicMode() {
+      isMonophonic = true;
+      updateModeButtons();
+    }
+
+    function setPolyphonicMode() {
+      isMonophonic = false;
+      updateModeButtons();
+    }
+
+    // ボタンのスタイルを更新
+    function updateModeButtons() {
+      const monophonicButton = document.getElementById('monophonicButton');
+      const polyphonicButton = document.getElementById('polyphonicButton');
+
+      monophonicButton.classList.toggle('btn-outline-primary', !isMonophonic);
+      monophonicButton.classList.toggle('btn-primary', isMonophonic);
+
+      polyphonicButton.classList.toggle('btn-outline-primary', isMonophonic);
+      polyphonicButton.classList.toggle('btn-primary', !isMonophonic);
+    }
 
     // 確認ダイアログを表示する関数
     async function showLoadModal(clips) {
@@ -49,7 +128,6 @@
 
             // Web Audio APIコンテキストの作成
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
             // preload
             const audioBuffers = await preloadAllAudio(clips, progressBar);
 
@@ -67,12 +145,21 @@
               );
             }
 
+
             // ボタンの作成とクリック時の処理を設定
             clips.forEach((clip, index) => {
               const button = document.createElement("button");
               button.type = "button";
               button.textContent = clip.title;
-              button.onclick = () => playAudio(audioBuffers[index]);
+              button.onclick = () => {
+                // 単音モードの場合、選択された音のみ再生
+                if (isMonophonic) {
+                  playMonoAudio(audioBuffers[index]);
+                } else {
+                  // 複音モードの場合、すべての音を同時に再生
+                  playPolyAudio(audioBuffers[index]);
+                }
+              };
               document.body.appendChild(button);
             });
 
@@ -100,7 +187,7 @@
         const promises = clips.map(async (clip, index) => {
 
           // ファイルの取得
-          const response = await fetch(clip.filepath);
+          const response = await fetch(`audioClips/${clip.title}.mp3`);
 
           // レスポンスが正常でない場合はエラーをスロー
           if (!response.ok) {
@@ -141,14 +228,6 @@
     }
 
 
-    // 音声再生
-    function playAudio(audioBuffer) {
-      const source = audioContext.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(audioContext.destination);
-      source.start(0);
-    }
-
     // 初期化関数
     async function initialize() {
       try {
@@ -164,6 +243,18 @@
         // モーダルウィンドウを表示 userGestureを得るため
         await showLoadModal(clips);
 
+        // isMonophonicの初期値を読み取り、ボタンのスタイルに反映
+        const monophonicButton = document.getElementById('monophonicButton');
+        const polyphonicButton = document.getElementById('polyphonicButton');
+
+        monophonicButton.classList.toggle('btn-outline-primary', !isMonophonic);
+        monophonicButton.classList.toggle('btn-primary', isMonophonic);
+
+        polyphonicButton.classList.toggle('btn-outline-primary', isMonophonic);
+        polyphonicButton.classList.toggle('btn-primary', !isMonophonic);
+
+
+
       } catch (error) {
         // エラーが発生した場合はコンソールに出力
         console.error(error);
@@ -174,6 +265,31 @@
     document.addEventListener("DOMContentLoaded", initialize);
 
   </script>
+
+  <!-- サイドバー -->
+  <script>
+    function openNav() {
+      document.getElementById("sidebar").style.width = "250px";
+    }
+
+    function closeNav() {
+      document.getElementById("sidebar").style.width = "0";
+    }
+  </script>
+
+
+
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
 </body>
 
 </html>
