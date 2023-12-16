@@ -18,10 +18,11 @@
   <!-- モーダルウィンドウ -->
   <div id="loadModal" class="modal">
     <div class="modal-content">
-      <button id="startLoading" class="btn btn-primary">音声の読み込みを開始</button>
-
+      <button id="startLoading" class="btn btn-primary modal-button">音声の読み込みを開始</button>
     </div>
   </div>
+
+
 
 
 
@@ -40,10 +41,10 @@
   <div id="sidebar" class="bg-dark text-white">
     <a href="javascript:void(0)" class="closebtn text-white" onclick="closeNav()">×</a>
     <div class="p-4 text-center">
-      <p class="text-white mb-2">再生モード</p>
+      <p class="text-white mb-2">発音数</p>
       <div class="btn-group">
-        <button id="monophonicButton" class="btn btn-primary rounded-pill" onclick="setMonophonicMode()">単音</button>
-        <button id="polyphonicButton" class="btn btn-primary rounded-pill" onclick="setPolyphonicMode()">複音</button>
+        <button id="monophonicButton" class="btn btn-primary rounded-pill" onclick="setMonophonicMode()">Mono</button>
+        <button id="polyphonicButton" class="btn btn-primary rounded-pill" onclick="setPolyphonicMode()">Poly</button>
       </div>
     </div>
   </div>
