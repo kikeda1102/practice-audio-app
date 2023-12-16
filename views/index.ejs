@@ -18,10 +18,11 @@
   <script>
     window.clips = JSON.parse('<%- clips %>');
   </script>
+  <!-- load modules-->
+  <script src="scripts/modal.js"></script>
   <script src="scripts/initialize.js"></script>
   <script src="scripts/audioPlay.js"></script>
   <script src="scripts/sidebar.js"></script>
-  <script src="scripts/modal.js"></script>
   <!-- Bootstrap JS and Popper.js -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -34,7 +35,7 @@
     crossorigin="anonymous"></script>
 
 
-  <!-- initial mordal -->
+  <!-- 最初のmordal -->
   <div id="loadModal" class="modal">
     <div class="modal-content">
       <button id="startLoading" class="btn btn-selected modal-button">音声の読み込みを開始</button>
@@ -46,8 +47,12 @@
   <p class="warning-text">※音量注意※</p>
 
 
-  <!-- ワード検索 結果表示 -->
-  <div id="searchResults"></div>
+  <!-- ボタンの表示 -->
+  <div id="playButtonArea" class="play-button-area">
+    <!-- ボタンがここに生成される -->
+  </div>
+
+
 
 
   <!-- サイドバーの表示トグルボタン-->

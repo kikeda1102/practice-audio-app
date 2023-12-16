@@ -12,6 +12,7 @@ h1 {
 
 .warning-text {
   color: red;
+  margin-bottom: 24px;
 }
 
 button {
