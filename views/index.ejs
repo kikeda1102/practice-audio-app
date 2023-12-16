@@ -18,7 +18,7 @@
   <!-- モーダルウィンドウ -->
   <div id="loadModal" class="modal">
     <div class="modal-content">
-      <button id="startLoading" class="btn btn-primary modal-button">音声の読み込みを開始</button>
+      <button id="startLoading" class="btn btn-selected modal-button">音声の読み込みを開始</button>
     </div>
   </div>
 
@@ -36,15 +36,28 @@
   </button>
 
 
-
   <!-- サイドバー -->
-  <div id="sidebar" class="bg-dark text-white">
+  <div id="sidebar" class="sidebar bg-dark text-white">
     <a href="javascript:void(0)" class="closebtn text-white" onclick="closeNav()">×</a>
-    <div class="p-4 text-center">
-      <p class="text-white mb-2">発音数</p>
-      <div class="btn-group">
-        <button id="monophonicButton" class="btn btn-primary rounded-pill" onclick="setMonophonicMode()">Mono</button>
-        <button id="polyphonicButton" class="btn btn-primary rounded-pill" onclick="setPolyphonicMode()">Poly</button>
+    <div class="p-4 text-center accordion-section-content">
+      <p class="text-white m-2">発音数</p>
+      <div class="mono-poly-buttons">
+        <button id="monophonicButton" class="btn btn-selected" onclick="setMonophonicMode()">Mono</button>
+        <button id="polyphonicButton" class="btn btn-selected" onclick="setPolyphonicMode()">Poly</button>
+      </div>
+      <!-- 検索フォーム -->
+      <p class="text-white m-2">検索</p>
+      <form id="searchForm" onsubmit="handleSearch(); return false;">
+        <input type="text" id="searchInput" placeholder="検索..." />
+      </form>
+
+      <div class="accordion">
+        <div class="accordion-section">
+          <p class="text-white mt-4 mb-2">フィルター</p>
+          <div class="accordion-section-content">
+            <!-- タグ用ボタンがここに生成される -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -100,11 +113,11 @@
       const monophonicButton = document.getElementById('monophonicButton');
       const polyphonicButton = document.getElementById('polyphonicButton');
 
-      monophonicButton.classList.toggle('btn-outline-primary', !isMonophonic);
-      monophonicButton.classList.toggle('btn-primary', isMonophonic);
+      monophonicButton.classList.toggle('btn-unselected', !isMonophonic);
+      monophonicButton.classList.toggle('btn-selected', isMonophonic);
 
-      polyphonicButton.classList.toggle('btn-outline-primary', isMonophonic);
-      polyphonicButton.classList.toggle('btn-primary', !isMonophonic);
+      polyphonicButton.classList.toggle('btn-unselected', isMonophonic);
+      polyphonicButton.classList.toggle('btn-selected', !isMonophonic);
     }
 
     // 確認ダイアログを表示する関数
@@ -147,8 +160,7 @@
               );
             }
 
-
-            // ボタンの作成とクリック時の処理を設定
+            // playボタンの作成とクリック時の処理を設定
             clips.forEach((clip, index) => {
               const button = document.createElement("button");
               button.type = "button";
@@ -177,11 +189,6 @@
       });
     }
 
-    // 指定時間待機する関数
-    async function sleep(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
     // 音声データを一括でプリロードする関数
     async function preloadAllAudio(clips, progressBar) {
       return new Promise(async (resolve) => {
@@ -205,9 +212,6 @@
           // 進捗のリアルタイム表示
           const progress = (index + 1) / clips.length * 100;
           progressBar.style.width = `${progress}%`;
-
-          // 1000ms待機
-          await sleep(1000);
 
 
           // 取得した音声データを返す
@@ -249,26 +253,40 @@
         const monophonicButton = document.getElementById('monophonicButton');
         const polyphonicButton = document.getElementById('polyphonicButton');
 
-        monophonicButton.classList.toggle('btn-outline-primary', !isMonophonic);
-        monophonicButton.classList.toggle('btn-primary', isMonophonic);
+        monophonicButton.classList.toggle('btn-unselected', !isMonophonic);
+        monophonicButton.classList.toggle('btn-selected', isMonophonic);
 
-        polyphonicButton.classList.toggle('btn-outline-primary', isMonophonic);
-        polyphonicButton.classList.toggle('btn-primary', !isMonophonic);
+        polyphonicButton.classList.toggle('btn-unselected', isMonophonic);
+        polyphonicButton.classList.toggle('btn-selected', !isMonophonic);
 
-        // サイドバー
-        document.addEventListener("click", function (event) {
-          const sidebar = document.getElementById('sidebar');
-          const sidebarToggleButton = document.getElementById('sidebar-toggle-button');
+        // サイドバー以外がクリッックされたときサイドバーを閉じる処理
+        // document.addEventListener("click", function (event) {
+        //   const sidebar = document.getElementById('sidebar');
+        //   const sidebarToggleButton = document.getElementById('sidebar-toggle-button');
 
-          let targetElement = event.target;
-          while (targetElement) {
-            if (targetElement === sidebar || targetElement === sidebarToggleButton) {
-              return; // ターゲットがサイドバーまたはトグルボタンの場合は何もしない
-            }
-            targetElement = targetElement.parentElement;
-          }
-          // ターゲットがサイドバーまたはトグルボタンの子孫でない場合はサイドバーを閉じる
-          closeNav();
+        //   let targetElement = event.target;
+        //   while (targetElement) {
+        //     if (targetElement === sidebar || targetElement === sidebarToggleButton) {
+        //       return; // ターゲットがサイドバーまたはトグルボタンの場合は何もしない
+        //     }
+        //     targetElement = targetElement.parentElement;
+        //   }
+        //   // ターゲットがサイドバーまたはトグルボタンの子孫でない場合はサイドバーを閉じる
+        //   closeNav();
+        // });
+
+        // フィルター機能
+        // clipsからwhoSaidのユニークな値を取得
+        const uniqueWhoSaidValues = [...new Set(clips.map(clip => clip.whoSaid))];
+
+        // タグ用ボタンの生成
+        const tagButtonsContainer = document.querySelector(".accordion-section-content");
+        uniqueWhoSaidValues.forEach(tag => {
+          const button = document.createElement("button");
+          button.className = "btn btn-selected rounded-pill";
+          button.textContent = tag;
+          button.onclick = () => filterClipsByTag(tag);
+          tagButtonsContainer.appendChild(button);
         });
 
 
@@ -283,14 +301,15 @@
 
   </script>
 
-  <!-- サイドバー -->
+  <!-- サイドバーのトグル -->
   <script>
     function openNav() {
-      document.getElementById("sidebar").style.width = "250px";
+      document.getElementById("sidebar").style.bottom = "0";
     }
 
+    // サイドバーを閉じる処理
     function closeNav() {
-      document.getElementById("sidebar").style.width = "0";
+      document.getElementById("sidebar").style.bottom = "-100%";
     }
   </script>
 
