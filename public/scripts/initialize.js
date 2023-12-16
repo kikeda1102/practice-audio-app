@@ -82,17 +82,18 @@ async function initialize() {
             // 検索結果があるかどうかをチェック
             if (searchResults.length > 0) {
                 // 検索結果がある場合はボタンを表示
-                searchResults.forEach((clip, index) => {
+                searchResults.forEach((clip) => {
                     const button = document.createElement("button");
                     button.type = "button";
                     button.textContent = clip.title;
                     button.onclick = () => {
                         // 単音モードの場合、選択された音のみ再生
+                        // 単音モードの場合、選択された音のみ再生
                         if (isMonophonic) {
-                            playMonoAudio(audioBuffers[index]);
+                            playMonoAudio(clip.audioBuffer);
                         } else {
                             // 複音モードの場合、すべての音を同時に再生
-                            playPolyAudio(audioBuffers[index]);
+                            playPolyAudio(clip.audioBuffer);
                         }
                     };
                     playButtonArea.appendChild(button);

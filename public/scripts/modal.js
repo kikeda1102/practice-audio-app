@@ -1,4 +1,4 @@
-// プリロードされた audioBuffers を取得する関数
+// プリロードされた audioBuffers を取得関数
 async function preloadAudioBuffers(clips, progressBar) {
     // Web Audio APIコンテキストの作成
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -45,18 +45,23 @@ async function showLoadModal(clips) {
                 // audioBuffersの取得
                 const audioBuffers = await preloadAudioBuffers(clips, progressBar);
 
-                // 音声再生ボタンの生成
+                // clipsにaudioBuffersを追加
                 clips.forEach((clip, index) => {
+                    clip.audioBuffer = audioBuffers[index];
+                });
+
+                // 音声再生ボタンの生成
+                clips.forEach((clip) => {
                     const button = document.createElement("button");
                     button.type = "button";
                     button.textContent = clip.title;
                     button.onclick = () => {
                         // 単音モードの場合、選択された音のみ再生
                         if (isMonophonic) {
-                            playMonoAudio(audioBuffers[index]);
+                            playMonoAudio(clip.audioBuffer);
                         } else {
                             // 複音モードの場合、すべての音を同時に再生
-                            playPolyAudio(audioBuffers[index]);
+                            playPolyAudio(clip.audioBuffer);
                         }
                     };
                     playButtonArea.appendChild(button);
