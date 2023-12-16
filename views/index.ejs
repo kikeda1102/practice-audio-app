@@ -29,10 +29,11 @@
   <p class="warning-text">※音量注意※</p>
 
   <!-- サイドバーの表示トグルボタン-->
-  <div id="sidebar-toggle-button" onclick="openNav()" class="position-fixed p-3 bg-dark text-white"
-    style="top: 0; left: 0;">
+  <button id="sidebar-toggle-button" onclick="openNav()" class="position-fixed p-3 bg-dark text-white"
+    style="bottom: 0; left: 0; cursor: pointer; border: none; outline: none; vertical-align: middle;">
     <span style="font-size: 24px;">&#9776;</span>
-  </div>
+  </button>
+
 
 
   <!-- サイドバー -->
@@ -253,6 +254,21 @@
         polyphonicButton.classList.toggle('btn-outline-primary', isMonophonic);
         polyphonicButton.classList.toggle('btn-primary', !isMonophonic);
 
+        // サイドバー
+        document.addEventListener("click", function (event) {
+          const sidebar = document.getElementById('sidebar');
+          const sidebarToggleButton = document.getElementById('sidebar-toggle-button');
+
+          let targetElement = event.target;
+          while (targetElement) {
+            if (targetElement === sidebar || targetElement === sidebarToggleButton) {
+              return; // ターゲットがサイドバーまたはトグルボタンの場合は何もしない
+            }
+            targetElement = targetElement.parentElement;
+          }
+          // ターゲットがサイドバーまたはトグルボタンの子孫でない場合はサイドバーを閉じる
+          closeNav();
+        });
 
 
       } catch (error) {
