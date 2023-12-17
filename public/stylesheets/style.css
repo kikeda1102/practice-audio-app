@@ -198,8 +198,3 @@ button:active {
 #videosList a:hover {
   text-decoration: underline; /* ホバー時にリンクの下線を表示 */
 }
-
-/* 戻るボタン */
-button {
-  margin-top: 20px; /* 戻るボタンの上部のマージンを設定 */
-}
