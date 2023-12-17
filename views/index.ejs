@@ -6,6 +6,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
   <!-- レスポンシブ対応、スマホ対応 -->
   <meta name="viewport"
     content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
@@ -14,19 +15,6 @@
 </head>
 
 <body>
-  <!-- global変数 -->
-  <script>
-    window.clips = JSON.parse(`<%- clips %>`); // audio Cliips
-
-    // 単音か複音かのフラグ
-    window.isMonophonic = true;
-
-    // for (const clip of window.clips) {
-    //   console.log(`clip.whoSaid.length: ${clip.whoSaid.length}`);
-    // }
-
-    window.currentSelectedTags = []; // 現在選択されているタグの配列
-  </script>
 
   <!-- load modules-->
   <script src="scripts/modal.js"></script>
@@ -34,6 +22,7 @@
   <script src="scripts/audioPlay.js"></script>
   <script src="scripts/sidebar.js"></script>
   <script src="scripts/search.js"></script>
+  <script src="scripts/sort.js"></script>
   <!-- Bootstrap JS and Popper.js -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -42,8 +31,20 @@
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+
+
+  <!-- global変数 -->
+  <script>
+    loaded_clips = JSON.parse(`<%- clips %>`); // audio Cliips
+    // sort
+    // ソートボタンの初期値
+    const selectedSortButtonId = 'sortDescendDateButton';
+    // ソートする
+    window.clips = sortClipsWrapper(loaded_clips, selectedSortButtonId);
+    window.currentSelectedTags = []; // 現在選択されているタグの配列
+  </script>
 
 
   <!-- 最初のmordal -->
@@ -86,14 +87,40 @@
           <!-- タグフィルターボタンがここに生成される -->
         </div>
 
-        <div class="p-4 text-center accordion-section-content">
+        <div class="accordion-section-content">
           <p class="text-white m-2">発音数</p>
           <div class="mono-poly-buttons">
             <button id="monophonicButton" class="btn btn-selected" onclick="setMonophonicMode()">Mono</button>
             <button id="polyphonicButton" class="btn btn-selected" onclick="setPolyphonicMode()">Poly</button>
           </div>
-
         </div>
+
+
+        <!-- ソート -->
+        <div class="mb-4 accordion-section-content">
+          <p class="text-white m-2">ソート</p>
+          <div class="btn-group" role="group" aria-label="Sort Buttons">
+            <button id="sortAscendDateButton" class="btn btn-outline-secondary btn-selected"
+              onclick="onSortButtonClick(window.clips, 'ascend', 'date', 'sortAscendDateButton')">
+              <i class="bi bi-calendar"></i> 日付昇順
+            </button>
+            <button id="sortDescendDateButton" class="btn btn-outline-secondary"
+              onclick="onSortButtonClick(window.clips, 'descend', 'date', 'sortDescendDateButton')">
+              <i class="bi bi-calendar2"></i> 日付降順
+            </button>
+            <button id="sortAscendTitleButton" class="btn btn-outline-secondary"
+              onclick="onSortButtonClick(window.clips, 'ascend', 'title', 'sortAscendTitleButton')">
+              <i class="bi bi-sort-alpha-up"></i> タイトル昇順
+            </button>
+            <button id="sortDescendTitleButton" class="btn btn-outline-secondary"
+              onclick="onSortButtonClick(window.clips, 'descend', 'title', 'sortDescendTitleButton')">
+              <i class="bi bi-sort-alpha-down"></i> タイトル降順
+            </button>
+          </div>
+        </div>
+
+
+
       </div>
     </div>
 

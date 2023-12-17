@@ -37,3 +37,25 @@ function toggleFilterSection() {
     const filterSection = document.querySelector('.accordion-section-content');
     filterSection.classList.toggle('hidden'); // 'hidden' クラスをトグル
 }
+
+
+
+// ソートボタンの選択状況を更新
+function updateSortButtons(selectedSortButtonId) {
+    // クリックされたボタン以外のボタンからは 'btn-selected' クラスを取り除く
+    const sortButtonIds = [
+        'sortAscendDateButton',
+        'sortDescendDateButton',
+        'sortAscendTitleButton',
+        'sortDescendTitleButton'
+    ];
+
+    sortButtonIds.forEach((buttonId) => {
+        const button = document.getElementById(buttonId);
+        button.classList.remove('btn-selected');
+    });
+
+    // クリックされたボタンに 'btn-selected' クラスを追加
+    const clickedButton = document.getElementById(selectedSortButtonId);
+    clickedButton.classList.add('btn-selected');
+}

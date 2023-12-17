@@ -9,6 +9,9 @@ async function initialize() {
         // audioClips
         const clips = window.clips;
 
+        // 単音か複音かのフラグ
+        window.isMonophonic = true;
+
         // モーダルウィンドウを表示 userGestureを得るため
         showLoadModal(clips);
 
@@ -19,6 +22,9 @@ async function initialize() {
         monophonicButton.classList.toggle('btn-selected', isMonophonic);
         polyphonicButton.classList.toggle('btn-unselected', isMonophonic);
         polyphonicButton.classList.toggle('btn-selected', !isMonophonic);
+
+        // ソートボタンの選択状況を更新
+        updateSortButtons(selectedSortButtonId);
 
         // サイドバー以外がクリッックされたときサイドバーを閉じる処理
         // document.addEventListener("click", function (event) {
