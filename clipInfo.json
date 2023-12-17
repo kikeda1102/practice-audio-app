@@ -423,5 +423,45 @@
     "uploadedDate": "2022-07-26",
     "time": "3:17",
     "whoSaid": ["others"]
+  },
+  {
+    "title": "第1回永田オーディション",
+    "filepath": "第1回永田オーディション.mp3",
+    "url": "https://www.youtube.com/watch?v=cO_cXkPPuNU",
+    "uploadedDate": "2023-12-15",
+    "time": "0:00",
+    "whoSaid": ["恐山"]
+  },
+  {
+    "title": "ガタがきてからでいいんじゃねぇか",
+    "filepath": "ガタがきてからでいいんじゃねぇか.mp3",
+    "url": "https://www.youtube.com/watch?v=cO_cXkPPuNU",
+    "uploadedDate": "2023-12-15",
+    "time": "1:19",
+    "whoSaid": ["永田"]
+  },
+  {
+    "title": "地獄に落ちろ！！(ギャラクシー)",
+    "filepath": "地獄に落ちろ！！(ギャラクシー).mp3",
+    "url": "https://www.youtube.com/watch?v=cO_cXkPPuNU",
+    "uploadedDate": "2023-12-15",
+    "time": "3:10",
+    "whoSaid": ["others"]
+  },
+  {
+    "title": "地獄に落ちろ！！(ヤスミノ)",
+    "filepath": "地獄に落ちろ！！(ヤスミノ).mp3",
+    "url": "https://www.youtube.com/watch?v=cO_cXkPPuNU",
+    "uploadedDate": "2023-12-15",
+    "time": "8:26",
+    "whoSaid": ["others"]
+  },
+  {
+    "title": "地獄に落ちろ！！(長島)",
+    "filepath": "地獄に落ちろ！！(長島).mp3",
+    "url": "https://www.youtube.com/watch?v=cO_cXkPPuNU",
+    "uploadedDate": "2023-12-15",
+    "time": "16:28",
+    "whoSaid": ["others"]
   }
 ]
