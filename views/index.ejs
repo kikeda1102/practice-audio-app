@@ -18,6 +18,9 @@
   <script>
     window.clips = JSON.parse(`<%- clips %>`); // audio Cliips
 
+    // 単音か複音かのフラグ
+    window.isMonophonic = true;
+
     // for (const clip of window.clips) {
     //   console.log(`clip.whoSaid.length: ${clip.whoSaid.length}`);
     // }
@@ -77,6 +80,12 @@
         <div class="search-form-content">
           <!-- 検索フォームがここに生成される -->
         </div>
+
+        <div class="accordion-section-content">
+          <p class="text-white mt-4 mb-2 tagbutton" onclick="toggleFilterSection()">タグ</p>
+          <!-- タグフィルターボタンがここに生成される -->
+        </div>
+
         <div class="p-4 text-center accordion-section-content">
           <p class="text-white m-2">発音数</p>
           <div class="mono-poly-buttons">
@@ -84,10 +93,6 @@
             <button id="polyphonicButton" class="btn btn-selected" onclick="setPolyphonicMode()">Poly</button>
           </div>
 
-          <div class="accordion-section-content">
-            <p class="text-white mt-4 mb-2 tagbutton" onclick="toggleFilterSection()">フィルター</p>
-            <!-- タグフィルターボタンがここに生成される -->
-          </div>
         </div>
       </div>
     </div>

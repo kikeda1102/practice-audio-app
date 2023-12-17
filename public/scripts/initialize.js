@@ -6,6 +6,7 @@ async function initialize() {
             e.preventDefault();
         }, { passive: false });
 
+        // audioClips
         const clips = window.clips;
 
         // モーダルウィンドウを表示 userGestureを得るため

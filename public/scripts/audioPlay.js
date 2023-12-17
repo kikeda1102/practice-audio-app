@@ -1,7 +1,5 @@
 // 現在再生中のソース
 let currentSource;
-// 単音か複音かのフラグ
-let isMonophonic = false;
 
 
 // 音声再生
