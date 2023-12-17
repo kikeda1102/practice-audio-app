@@ -1,6 +1,6 @@
 // サイドバーのトグル
 function openNav() {
-    document.getElementById("sidebar").style.bottom = "0";
+    document.getElementById("sidebar").style.bottom = "-0%";
 }
 
 // サイドバーを閉じる処理

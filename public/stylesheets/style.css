@@ -119,6 +119,8 @@ button:active {
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;
+  overflow-y: auto; /* スクロール可能にする */
+  max-height: 100vh; /* 画面の高さいっぱいに広がるように */
 }
 
 #sidebar a {

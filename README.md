@@ -2,6 +2,7 @@
 
 ### TODO
 
+- analytics 導入
 - 参照元動画を掲載
 - スマホのタップ対応 click を touch に
 - sideBar の挙動 スマホで邪魔にならないように
