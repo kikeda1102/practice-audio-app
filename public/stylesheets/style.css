@@ -180,3 +180,26 @@ button:active {
 .sidebar button.btn-selected:active {
   box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* ページのコンテンツ */
+#videosList {
+  list-style-type: none; /* リストのマーカー（黒丸）を非表示にする */
+  padding: 0; /* リストの内側の余白をゼロにする */
+  margin-top: 20px; /* 上部のマージンを設定 */
+}
+
+#videosList a {
+  display: block;
+  margin-bottom: 10px; /* 各リンクの下に余白を設定 */
+  color: #007bff; /* リンクのテキストカラーを設定 */
+  text-decoration: none; /* リンクの下線を非表示にする */
+}
+
+#videosList a:hover {
+  text-decoration: underline; /* ホバー時にリンクの下線を表示 */
+}
+
+/* 戻るボタン */
+button {
+  margin-top: 20px; /* 戻るボタンの上部のマージンを設定 */
+}

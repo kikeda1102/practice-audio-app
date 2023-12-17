@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- <link rel="stylesheet" type="text/css" href="stylesheets/style.css" /> -->
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- レスポンシブ対応、スマホ対応 -->
     <meta name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
     <title>Reference Videos</title>
     <!-- 他の必要なヘッダー情報を追加 -->
 </head>
@@ -31,11 +31,13 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-primary m-4" onclick="goBack()">戻る</button>
                 <h1 class="display-6 m-4">切り抜き元動画</h1>
 
                 <!-- ユニークなリンクを列挙 -->
                 <ul id="videosList"></ul>
+
+                <button class="btn btn-primary m-4" onclick="goBack()">戻る</button>
+
 
                 <script>
                     // データを受け取る
