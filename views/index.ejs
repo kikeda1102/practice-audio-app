@@ -16,8 +16,13 @@
 <body>
   <!-- global変数 -->
   <script>
-    window.clips = JSON.parse('<%- clips %>');
-    window.currentSelectedTags = [];
+    window.clips = JSON.parse(`<%- clips %>`); // audio Cliips
+
+    // for (const clip of window.clips) {
+    //   console.log(`clip.whoSaid.length: ${clip.whoSaid.length}`);
+    // }
+
+    window.currentSelectedTags = []; // 現在選択されているタグの配列
   </script>
 
   <!-- load modules-->
@@ -56,8 +61,6 @@
   </div>
 
 
-
-
   <!-- サイドバーの表示トグルボタン-->
   <button id="sidebar-toggle-button" onclick="openNav()" class="position-fixed p-3 bg-dark text-white"
     style="bottom: 0; left: 0; cursor: pointer; border: none; outline: none; vertical-align: middle;">
@@ -88,15 +91,6 @@
         </div>
       </div>
     </div>
-
-    <script>
-      function toggleFilterSection() {
-        const filterSection = document.querySelector('.accordion-section-content');
-        filterSection.classList.toggle('hidden'); // 'hidden' クラスをトグル
-      }
-    </script>
-
-
 
 </body>
 

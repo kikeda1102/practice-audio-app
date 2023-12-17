@@ -30,3 +30,10 @@ function updateTagButtons(currentSelectedTags) {
         // console.log(`${button.textContent}'のstyleは${button.style}です`);
     });
 }
+
+
+// タグフィルターの表示・非表示を切り替える
+function toggleFilterSection() {
+    const filterSection = document.querySelector('.accordion-section-content');
+    filterSection.classList.toggle('hidden'); // 'hidden' クラスをトグル
+}

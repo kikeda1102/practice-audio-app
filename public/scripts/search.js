@@ -41,16 +41,25 @@ function performSearch(query, clips) {
     if (!query) {
         return clips;
     }
+
     // 検索結果を格納する配列
     const searchResults = [];
 
+    // 入力クエリとタイトルをひらがなに変換する関数
+    const toHiragana = (text) => text
+        .replace(/[\u30a1-\u30f6]/g, match => String.fromCharCode(match.charCodeAt(0) - 0x60));
+
+    const queryInHiragana = toHiragana(query.toLowerCase());
+
     // clipsから検索クエリに一致するclipを抽出
     clips.forEach(clip => {
-        // clip.titleがqueryを含む場合
-        if (clip.title.toLowerCase().includes(query.toLowerCase())) {
+        // クエリとタイトルをひらがなに変換して比較
+        const titleInHiragana = toHiragana(clip.title.toLowerCase());
+        if (titleInHiragana.includes(queryInHiragana)) {
             searchResults.push(clip);
         }
     });
+
     return searchResults;
 }
 
@@ -116,13 +125,11 @@ function performFiltering(tags, clips) {
 
     // clipsからtagsに一致するclipを抽出
     clips.forEach(clip => {
-        // clip.whoSaidがtagsに含まれる場合
-        if (tags.includes(clip.whoSaid)) {
+        // clip.whoSaidがtagsに一つでも含まれる場合
+        if (tags.some(tag => clip.whoSaid.includes(tag))) {
             filteredClips.push(clip);
         }
     });
-
-    // console.log(`tags.length === ${tags.length}`)
 
     return filteredClips;
 }

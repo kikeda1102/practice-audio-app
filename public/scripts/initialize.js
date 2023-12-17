@@ -35,9 +35,10 @@ async function initialize() {
         //   closeNav();
         // });
 
+
         // タグフィルター機能
         // clipsからwhoSaidのユニークな値を取得
-        const uniqueWhoSaidValues = [...new Set(clips.map(clip => clip.whoSaid))];
+        const uniqueWhoSaidValues = [...new Set(clips.flatMap(clip => clip.whoSaid))];
 
 
         // タグフィルターのボタンの生成
@@ -49,6 +50,8 @@ async function initialize() {
             button.onclick = () => filterClipsByTag(tag);
             tagButtonsContainer.appendChild(button);
         });
+
+
 
         // 検索フォームの生成
         const searchFormContainer = document.querySelector(".search-form-content");

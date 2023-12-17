@@ -25,9 +25,12 @@ const jsonFilePath = path.join(__dirname, "clipInfo.json");
 // ルートパスへのGETリクエストの処理
 app.get("/", (req, res) => {
   // JSONファイルから曲の情報を取得
-  const clips = JSON.stringify(
-    JSON.parse(fs.readFileSync(jsonFilePath, "utf8"))
-  );
+  // const clips = JSON.stringify(
+  //   JSON.parse(fs.readFileSync(jsonFilePath, "utf8"))
+  // );
+  const clips = fs.readFileSync(jsonFilePath, "utf8");
+  // console.log(`clips: ${clips}`);
+
 
   // データベースから取得した曲の情報をテンプレートに渡して表示
   res.render("index", { clips: clips });
