@@ -32,12 +32,6 @@ function updateTagButtons(currentSelectedTags) {
 }
 
 
-// タグフィルターの表示・非表示を切り替える
-function toggleFilterSection() {
-    const filterSection = document.querySelector('.accordion-section-content');
-    filterSection.classList.toggle('hidden'); // 'hidden' クラスをトグル
-}
-
 
 
 // ソートボタンの選択状況を更新

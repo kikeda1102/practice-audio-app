@@ -36,6 +36,12 @@ app.get("/", (req, res) => {
   res.render("index", { clips: clips });
 });
 
+const clips = fs.readFileSync(jsonFilePath, "utf8");
+
+app.get("/reference-videos", (req, res) => {
+  res.render("reference-videos", { clips: clips });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
