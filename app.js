@@ -40,19 +40,30 @@ app.get('/reference-videos', async (req, res) => {
 
     // 重複を除いた切り抜き元動画のURLを取得
     for (const clip of JSON.parse(clips)) {
-      const videoUrl = clip.url;
-      if (!uniqueUrls.has(videoUrl)) {
-        uniqueUrls.add(videoUrl);
+      if (clip && clip.url) {
+        const videoUrl = clip.url;
+        if (!uniqueUrls.has(videoUrl)) {
+          uniqueUrls.add(videoUrl);
 
-        const videoId = youtubeAPI.extractVideoIdFromUrl(videoUrl);
-        if (!videoId) {
-          throw new Error('Invalid YouTube video URL');
+          const videoId = youtubeAPI.extractVideoIdFromUrl(videoUrl);
+          if (!videoId) {
+            throw new Error('Invalid YouTube video URL');
+          }
+
+          const title = await youtubeAPI.getVideoTitle(videoId);
+          const uploadedDate = clip.uploadedDate; // アップロードされた日時
+
+          videosData.push({ url: videoUrl, title: title || videoUrl, uploadedDate });
         }
-
-        const title = await youtubeAPI.getVideoTitle(videoId);
-        videosData.push({ url: videoUrl, title: title || videoUrl });
       }
     }
+
+    // 日付で昇順にソート
+    videosData.sort((a, b) => {
+      const dateA = new Date(a.uploadedDate);
+      const dateB = new Date(b.uploadedDate);
+      return dateA - dateB;
+    });
 
     res.render('reference-videos', { videosData });
   } catch (error) {

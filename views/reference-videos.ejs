@@ -12,7 +12,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
-    <title>Reference Videos</title>
+    <title>オモチャンボタン</title>
 </head>
 
 <body>
@@ -31,14 +31,28 @@
                         const listItem = document.createElement('li');
                         const link = document.createElement('a');
                         link.href = data.url;
-                        link.textContent = data.title;
-                        link.target = '_blank';
+                        link.textContent = `${formatDate(data.uploadedDate)}: 「${data.title}」`;
+                        link.target = '_blank'; // サイト外で開く
+
+
                         listItem.appendChild(link);
                         videosList.appendChild(listItem);
                     });
 
                     function goBack() {
                         window.history.back();
+                    }
+
+                    function formatDate(dateString) {
+                        // 日付を "2023-12-18" の形式にフォーマット
+                        if (!dateString) {
+                            return 'Unknown';
+                        }
+                        const date = new Date(dateString);
+                        const year = date.getFullYear();
+                        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+                        const day = ('0' + date.getDate()).slice(-2);
+                        return `${year}-${month}-${day}`;
                     }
                 </script>
             </div>
