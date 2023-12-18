@@ -587,8 +587,49 @@
   {
     "title": "おかげさまで生きております！！",
     "filepath": "おかげさまで生きております！！.mp3",
+    "url": "https://www.youtube.com/watch?v=reYcGO1EZws",
     "uploadedDate": "2021-09-17",
     "time": "0:22",
     "whoSaid": ["原宿"]
+  },
+  {
+    "title": "オモロー！",
+    "filepath": "オモロー！.mp3",
+    "url": "https://www.youtube.com/watch?v=MstM6Azd5Fg",
+    "uploadedDate": "2022-02-18",
+    "time": "15:51",
+    "whoSaid": ["永田"]
+  },
+  {
+    "title": "オモロい！",
+    "filepath": "オモロい！.mp3",
+    "url": "https://www.youtube.com/watch?v=MstM6Azd5Fg",
+    "uploadedDate": "2022-02-18",
+    "time": "15:53",
+    "whoSaid": ["原宿", "ARuFa", "加藤", "恐山"]
+  },
+  {
+    "title": "こりゃびっくり",
+    "filepath": "こりゃびっくり.mp3",
+    "url": "https://www.youtube.com/watch?v=MstM6Azd5Fg",
+    "uploadedDate": "2022-02-18",
+    "time": "28:53",
+    "whoSaid": ["ARuFa"]
+  },
+  {
+    "title": "テヘペロンチョ",
+    "filepath": "テヘペロンチョ.mp3",
+    "url": "https://www.youtube.com/watch?v=MstM6Azd5Fg",
+    "uploadedDate": "2022-02-18",
+    "time": "21:21",
+    "whoSaid": ["恐山"]
+  },
+  {
+    "title": "バッテンリップでごぜぇます",
+    "filepath": "バッテンリップでごぜぇます.mp3",
+    "url": "https://www.youtube.com/watch?v=MstM6Azd5Fg",
+    "uploadedDate": "2022-02-18",
+    "time": "21:22",
+    "whoSaid": ["恐山"]
   }
 ]
