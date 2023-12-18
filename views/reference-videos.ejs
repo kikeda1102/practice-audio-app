@@ -1,3 +1,5 @@
+<!-- views/reference-videos.ejs -->
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -11,59 +13,30 @@
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
     <title>Reference Videos</title>
-    <!-- 他の必要なヘッダー情報を追加 -->
 </head>
 
 <body>
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-        </script>
-
-
-    <!-- ページのコンテンツ -->
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <h1 class="display-6 m-4">切り抜き元動画</h1>
-
-                <!-- ユニークなリンクを列挙 -->
                 <ul id="videosList"></ul>
-
                 <button class="btn btn-primary m-4 button" onclick="goBack()">戻る</button>
 
-
                 <script>
-                    // データを受け取る
-                    const clips = JSON.parse(`<%- clips %>`);
-
-                    // ユニークなURLのリスト
-                    const uniqueUrls = [];
-
-                    // リンクを動的に生成
+                    const videosData = JSON.parse(`<%- JSON.stringify(videosData) %>`);
                     const videosList = document.getElementById('videosList');
-                    clips.forEach(clip => {
-                        // URLが既にリストに存在しない場合のみ追加
-                        if (!uniqueUrls.includes(clip.url)) {
-                            uniqueUrls.push(clip.url);
 
-                            const listItem = document.createElement('li');
-                            const link = document.createElement('a');
-                            link.href = clip.url;
-                            link.textContent = clip.uploadedDate || clip.url; // 動画のタイトルがない場合はURLを表示
-                            link.target = '_blank'; // 新しいウィンドウまたはタブで開く
-                            listItem.appendChild(link);
-                            videosList.appendChild(listItem);
-                        }
+                    videosData.forEach(data => {
+                        const listItem = document.createElement('li');
+                        const link = document.createElement('a');
+                        link.href = data.url;
+                        link.textContent = data.title;
+                        link.target = '_blank';
+                        listItem.appendChild(link);
+                        videosList.appendChild(listItem);
                     });
 
-                    // 戻るボタンの処理
                     function goBack() {
                         window.history.back();
                     }
@@ -71,8 +44,6 @@
             </div>
         </div>
     </div>
-
-
 </body>
 
 </html>

@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 require('dotenv').config();
 require('./config');
+const youtubeAPI = require('./youtubeAPI');
 const app = express();
 const PORT = process.env.PORT || 3000; // Herokuが提供するポートまたはデフォルトのポート3000を使用
 
@@ -23,26 +24,43 @@ app.set("views", __dirname + "/views");
 
 // JSONファイルの絶対パスを取得
 const jsonFilePath = path.join(__dirname, "clipInfo.json");
+const clips = fs.readFileSync(jsonFilePath, "utf8");
 
 // ルートパスへのGETリクエストの処理
 app.get("/", (req, res) => {
-  // JSONファイルから曲の情報を取得
-  // const clips = JSON.stringify(
-  //   JSON.parse(fs.readFileSync(jsonFilePath, "utf8"))
-  // );
-  const clips = fs.readFileSync(jsonFilePath, "utf8");
-  // console.log(`clips: ${clips}`);
-
-
   // データベースから取得した曲の情報をテンプレートに渡して表示
   res.render("index", { clips: clips });
 });
 
-const clips = fs.readFileSync(jsonFilePath, "utf8");
+// 切り抜き元動画を表示
+app.get('/reference-videos', async (req, res) => {
+  try {
+    const uniqueUrls = new Set();
+    const videosData = [];
 
-app.get("/reference-videos", (req, res) => {
-  res.render("reference-videos", { clips: clips });
+    // 重複を除いた切り抜き元動画のURLを取得
+    for (const clip of JSON.parse(clips)) {
+      const videoUrl = clip.url;
+      if (!uniqueUrls.has(videoUrl)) {
+        uniqueUrls.add(videoUrl);
+
+        const videoId = youtubeAPI.extractVideoIdFromUrl(videoUrl);
+        if (!videoId) {
+          throw new Error('Invalid YouTube video URL');
+        }
+
+        const title = await youtubeAPI.getVideoTitle(videoId);
+        videosData.push({ url: videoUrl, title: title || videoUrl });
+      }
+    }
+
+    res.render('reference-videos', { videosData });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Error fetching video title');
+  }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
