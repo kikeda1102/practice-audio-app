@@ -6,6 +6,8 @@ const mysql = require("mysql2");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
+require('dotenv').config();
+require('./config');
 const app = express();
 const PORT = process.env.PORT || 3000; // Herokuが提供するポートまたはデフォルトのポート3000を使用
 
