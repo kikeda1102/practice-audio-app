@@ -112,11 +112,19 @@
     "whoSaid": ["永田"]
   },
   {
-    "title": "お花を植えてよく頑張った！",
-    "filepath": "お花を植えてよく頑張った！.mp3",
+    "title": "お花を植えて",
+    "filepath": "お花を植えて.mp3",
     "url": "https://www.youtube.com/watch?v=GtGotXKmlkU",
     "uploadedDate": "2023-07-08",
     "time": "1:16",
+    "whoSaid": ["原宿"]
+  },
+  {
+    "title": "よく頑張った！",
+    "filepath": "よく頑張った！.mp3",
+    "url": "https://www.youtube.com/watch?v=GtGotXKmlkU",
+    "uploadedDate": "2023-07-08",
+    "time": "1:17",
     "whoSaid": ["原宿"]
   },
   {
@@ -561,8 +569,8 @@
     "whoSaid": ["others"]
   },
   {
-    "title": "適当なこと言ってんじゃねぇよ",
-    "filepath": "適当なこと言ってんじゃねぇよ.mp3",
+    "title": "適当なこと言ってんじゃねぇ",
+    "filepath": "適当なこと言ってんじゃねぇ.mp3",
     "url": "https://www.youtube.com/watch?v=GsN1-8CkOJo&t=64s",
     "uploadedDate": "2021-08-13",
     "time": "4:48",
