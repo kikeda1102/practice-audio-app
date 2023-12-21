@@ -393,14 +393,6 @@
     "whoSaid": ["others"]
   },
   {
-    "title": "何でもやっていいわけじゃねーぞ",
-    "filepath": "何でもやっていいわけじゃねーぞ.mp3",
-    "url": "https://www.youtube.com/watch?v=6UDLoqjbjLQ",
-    "uploadedDate": "2022-07-26",
-    "time": "1:45",
-    "whoSaid": ["原宿"]
-  },
-  {
     "title": "ジジィィィィ！！",
     "filepath": "ジジィィィィ！！.mp3",
     "url": "https://www.youtube.com/watch?v=6UDLoqjbjLQ",
@@ -631,5 +623,93 @@
     "uploadedDate": "2022-02-18",
     "time": "21:22",
     "whoSaid": ["恐山"]
+  },
+  {
+    "title": "アメリカみたいなBBQ、したいンゴねぇ",
+    "filepath": "アメリカみたいなBBQ、したいンゴねぇ.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "0:00",
+    "whoSaid": ["永田"]
+  },
+  {
+    "title": "狂った肉屋",
+    "filepath": "狂った肉屋.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "0:51",
+    "whoSaid": ["ARuFa"]
+  },
+  {
+    "title": "よしてくれよ…",
+    "filepath": "よしてくれよ….mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "1:53",
+    "whoSaid": ["恐山"]
+  },
+  {
+    "title": "ごつ盛り",
+    "filepath": "ごつ盛り.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "2:09",
+    "whoSaid": ["原宿"]
+  },
+  {
+    "title": "LADIES AND GENTLEMEN",
+    "filepath": "LADIES AND GENTLEMEN.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "3:04",
+    "whoSaid": ["加藤"]
+  },
+  {
+    "title": "WELCOME TO",
+    "filepath": "WELCOME TO.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "3:07",
+    "whoSaid": ["加藤"]
+  },
+  {
+    "title": "OMCRBBQ!",
+    "filepath": "OMCRBBQ!.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "3:08",
+    "whoSaid": ["加藤"]
+  },
+  {
+    "title": "じゃあ肉あるんですか！？",
+    "filepath": "じゃあ肉あるんですか！？.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "2:27",
+    "whoSaid": ["原宿"]
+  },
+  {
+    "title": "いいじゃん",
+    "filepath": "いいじゃん.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "4:22",
+    "whoSaid": ["ARuFa"]
+  },
+  {
+    "title": "エロッ",
+    "filepath": "エロッ.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "7:38",
+    "whoSaid": ["永田"]
+  },
+  {
+    "title": "動物性～",
+    "filepath": "動物性～.mp3",
+    "url": "https://www.youtube.com/watch?v=LQwKdNpWriI",
+    "uploadedDate": "2019-11-01",
+    "time": "9:15",
+    "whoSaid": ["原宿"]
   }
 ]
