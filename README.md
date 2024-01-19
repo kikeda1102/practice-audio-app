@@ -1,6 +1,6 @@
 # オモチャンボタン
 
-omochan-button-241a82b2e3d4.herokuapp.com/
+https://omochan-button-241a82b2e3d4.herokuapp.com/
 
 [オモコロチャンネル](https://www.youtube.com/channel/UCOx-oLP9tOhiYwSK_m-yVxA)のボタンアプリ
 
