@@ -10,7 +10,7 @@ require('dotenv').config();
 require('./config');
 const youtubeAPI = require('./youtubeAPI');
 const app = express();
-const PORT = process.env.PORT || 3000; // Herokuが提供するポートまたはデフォルトのポート3000を使用
+const PORT = process.env.PORT || 3000;
 
 app.use(cors()); // CORSミドルウェアを追加
 app.use(bodyParser.urlencoded({ extended: true })); // URLエンコードされたデータを解析するミドルウェアを追加
