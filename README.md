@@ -1,6 +1,6 @@
 # オモチャンボタン
 
-https://omochan-button-241a82b2e3d4.herokuapp.com/
+https://omochan-button.onrender.com/
 
 [オモコロチャンネル](https://www.youtube.com/channel/UCOx-oLP9tOhiYwSK_m-yVxA)のボタンアプリ
 
@@ -8,7 +8,7 @@ https://omochan-button-241a82b2e3d4.herokuapp.com/
 
 - Node.js EJS で実装
 - YouTube Data API を使用しタイトル取得
-- heroku にデプロイ
+- render にデプロイ
 
 ### TODO
 
